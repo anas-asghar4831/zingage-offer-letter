@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Zingage Offer Letter Generator",
   description: "Generate beautiful offer letters as PDF documents",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
