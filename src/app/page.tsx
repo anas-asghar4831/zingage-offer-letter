@@ -13,6 +13,7 @@ export default function Home() {
             <Link href="/" className="flex items-center gap-3">
               <ZingageLogo className="h-8 sm:h-10 w-auto text-[#FF6B02]" />
             </Link>
+            <span className="text-lg sm:text-xl font-semibold text-[#2D6D4F] self-center">Offer Letter Generator</span>
           </div>
         </div>
       </header>
@@ -20,15 +21,6 @@ export default function Home() {
       {/* Main Content - Server rendered layout with client form */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         <div className="max-w-2xl mx-auto">
-          {/* Hero Section - Server rendered */}
-          <div className="text-center mb-8 sm:mb-12">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D6D4F] mb-4">
-              Offer Letter Generator
-            </h1>
-            <p className="text-base sm:text-lg text-[#2D6D4F]/70 max-w-xl mx-auto">
-              Create professional, beautifully designed offer letters in seconds. Fill in the details below and generate a PDF instantly.
-            </p>
-          </div>
 
           {/* Form Card - Server rendered container, client form inside */}
           <div className="bg-white rounded-2xl shadow-lg border border-[#D6D4B6] p-6 sm:p-8">

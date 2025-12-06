@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { pdf } from "@react-pdf/renderer";
@@ -24,13 +24,8 @@ const PDFViewerComponent = dynamic(
   }
 );
 
-// Subscribe function for useSyncExternalStore (no-op)
-function subscribe() {
-  return () => {};
-}
-
-// Get offer data from localStorage
-function getOfferDataSnapshot(): OfferLetterData | null {
+// Read offer data from localStorage (runs only on client)
+function getStoredOfferData(): OfferLetterData | null {
   if (typeof window === "undefined") return null;
   const storedData = localStorage.getItem("offerLetterData");
   if (storedData) {
@@ -43,18 +38,10 @@ function getOfferDataSnapshot(): OfferLetterData | null {
   return null;
 }
 
-function getOfferDataServerSnapshot(): OfferLetterData | null {
-  return null;
-}
-
-// Get base URL
-function getBaseUrlSnapshot(): string {
+// Get base URL (runs only on client)
+function getBaseUrl(): string {
   if (typeof window === "undefined") return "";
   return window.location.origin;
-}
-
-function getBaseUrlServerSnapshot(): string {
-  return "";
 }
 
 interface PreviewClientProps {
@@ -64,21 +51,21 @@ interface PreviewClientProps {
 export function PreviewHeaderActions() {
   const router = useRouter();
   const [isDownloading, setIsDownloading] = useState(false);
+  // Use lazy initializers to read values during initial render
+  const [offerData] = useState<OfferLetterData | null>(getStoredOfferData);
+  const [baseUrl] = useState<string>(getBaseUrl);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Use useSyncExternalStore to get offer data from localStorage
-  const offerData = useSyncExternalStore(subscribe, getOfferDataSnapshot, getOfferDataServerSnapshot);
-  const baseUrl = useSyncExternalStore(subscribe, getBaseUrlSnapshot, getBaseUrlServerSnapshot);
-
-  // Register fonts on client side
+  // Register fonts and check for data
   useEffect(() => {
     registerFonts();
-  }, []);
-
-  // Redirect if no data
-  useEffect(() => {
-    if (typeof window !== "undefined" && !localStorage.getItem("offerLetterData")) {
+    // Redirect if no data
+    if (!localStorage.getItem("offerLetterData")) {
       router.push("/");
     }
+    // Hydration flag - intentional setState on mount for client-side detection
+     
+    setIsHydrated(true);
   }, [router]);
 
   const handleDownload = async () => {
@@ -116,7 +103,7 @@ export function PreviewHeaderActions() {
       </button>
       <button
         onClick={handleDownload}
-        disabled={isDownloading || !offerData}
+        disabled={isDownloading || !isHydrated || !offerData}
         className="px-4 sm:px-6 py-2 rounded-lg bg-[#FF6B02] hover:bg-[#e55f00] disabled:bg-[#D6D4B6] disabled:cursor-not-allowed text-white font-medium text-sm flex items-center gap-2 cursor-pointer"
       >
         {isDownloading ? (
@@ -139,8 +126,8 @@ export function PreviewHeaderActions() {
 }
 
 export function PreviewInfo() {
-  // Use useSyncExternalStore to get offer data from localStorage
-  const offerData = useSyncExternalStore(subscribe, getOfferDataSnapshot, getOfferDataServerSnapshot);
+  // Use lazy initializer to read localStorage during initial render
+  const [offerData] = useState<OfferLetterData | null>(getStoredOfferData);
 
   if (!offerData) {
     return (
@@ -157,23 +144,23 @@ export function PreviewInfo() {
 
 export default function PreviewClient({ baseUrl }: PreviewClientProps) {
   const router = useRouter();
+  // Use lazy initializer to read localStorage during initial render
+  const [offerData] = useState<OfferLetterData | null>(getStoredOfferData);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Use useSyncExternalStore to get offer data from localStorage
-  const offerData = useSyncExternalStore(subscribe, getOfferDataSnapshot, getOfferDataServerSnapshot);
-
-  // Register fonts on client side
+  // Register fonts and check for data
   useEffect(() => {
     registerFonts();
-  }, []);
-
-  // Redirect if no data
-  useEffect(() => {
-    if (typeof window !== "undefined" && !localStorage.getItem("offerLetterData")) {
+    // Redirect if no data
+    if (!localStorage.getItem("offerLetterData")) {
       router.push("/");
     }
+    // Hydration flag - intentional setState on mount for client-side detection
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsHydrated(true);
   }, [router]);
 
-  if (!offerData) {
+  if (!isHydrated || !offerData) {
     return (
       <div className="flex items-center justify-center h-[60vh] sm:h-[70vh] lg:h-[80vh]">
         <div className="text-center">

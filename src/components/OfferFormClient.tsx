@@ -1,18 +1,13 @@
 "use client";
 
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import OfferLetterForm, { type FormData } from "./OfferLetterForm";
 import type { OfferLetterData } from "@/lib/types";
 import { registerFonts } from "@/lib/fonts";
 
-// Subscribe function for useSyncExternalStore (no-op)
-function subscribe() {
-  return () => {};
-}
-
-// Get initial form data from localStorage
-function getFormDataSnapshot(): FormData | null {
+// Read form data from localStorage (runs only on client)
+function getStoredFormData(): FormData | null {
   if (typeof window === "undefined") return null;
   const storedFormData = localStorage.getItem("offerLetterFormData");
   if (storedFormData) {
@@ -25,20 +20,19 @@ function getFormDataSnapshot(): FormData | null {
   return null;
 }
 
-function getFormDataServerSnapshot(): FormData | null {
-  return null;
-}
-
 export default function OfferFormClient() {
   const router = useRouter();
   const [isGenerating, setIsGenerating] = useState(false);
+  // Use lazy initializer to read localStorage during initial render
+  const [initialFormData] = useState<FormData | null>(getStoredFormData);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Use useSyncExternalStore to get initial form data from localStorage
-  const initialFormData = useSyncExternalStore(subscribe, getFormDataSnapshot, getFormDataServerSnapshot);
-
-  // Register fonts on client side (doesn't set state, safe in useEffect)
+  // Register fonts on mount
   useEffect(() => {
     registerFonts();
+    // Hydration flag - intentional setState on mount for client-side detection
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsHydrated(true);
   }, []);
 
   const handleFormSubmit = (data: OfferLetterData, formData: FormData) => {
@@ -51,6 +45,15 @@ export default function OfferFormClient() {
     // Navigate to preview page
     router.push("/preview");
   };
+
+  // Show loading during SSR/hydration
+  if (!isHydrated) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF6B02]"></div>
+      </div>
+    );
+  }
 
   return (
     <OfferLetterForm
