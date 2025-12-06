@@ -1,5 +1,3 @@
-"use client";
-
 import { Document } from "@react-pdf/renderer";
 import Page1Cover from "./Page1Cover";
 import Page2Introduction from "./Page2Introduction";

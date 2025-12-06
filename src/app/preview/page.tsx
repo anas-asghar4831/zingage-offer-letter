@@ -1,16 +1,9 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import ZingageLogo from "@/components/ZingageLogo";
 import PreviewClient, { PreviewHeaderActions, PreviewInfo } from "@/components/PreviewClient";
 
 // This is a Server Component - the layout is server-rendered
-export default async function Preview() {
-  // Get the base URL from headers for PDF asset loading
-  const headersList = await headers();
-  const host = headersList.get("host") || "localhost:3000";
-  const protocol = headersList.get("x-forwarded-proto") || "http";
-  const baseUrl = `${protocol}://${host}`;
-
+export default function Preview() {
   return (
     <div className="min-h-screen bg-[#FCFBE9]">
       {/* Header - Server rendered layout with client actions */}
@@ -40,7 +33,7 @@ export default async function Preview() {
 
           {/* PDF Viewer Container - Server rendered, client PDF inside */}
           <div className="bg-white rounded-2xl shadow-lg border border-[#D6D4B6] overflow-hidden">
-            <PreviewClient baseUrl={baseUrl} />
+            <PreviewClient />
           </div>
         </div>
       </main>

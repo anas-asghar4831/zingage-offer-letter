@@ -1,29 +1,98 @@
 import { Font } from "@react-pdf/renderer";
 
-// Register fonts for PDF rendering
+// Track if fonts are registered to avoid duplicate registration
+let fontsRegistered = false;
+
+// Register fonts for PDF rendering - using local files for performance
 export const registerFonts = () => {
-  // Manrope font family - using Google Fonts CDN
+  // Prevent duplicate registration
+  if (fontsRegistered) return;
+
+  // Manrope font family - local files (only weights actually used)
   Font.register({
     family: "Manrope",
     fonts: [
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/manrope@latest/latin-400-normal.ttf",
+        src: "/fonts/manrope/Manrope-Regular.ttf",
         fontWeight: 400,
         fontStyle: "normal",
       },
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/manrope@latest/latin-500-normal.ttf",
+        src: "/fonts/manrope/Manrope-Medium.ttf",
         fontWeight: 500,
         fontStyle: "normal",
       },
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/manrope@latest/latin-600-normal.ttf",
+        src: "/fonts/manrope/Manrope-SemiBold.ttf",
         fontWeight: 600,
         fontStyle: "normal",
       },
+      // Bold (700) removed - not used in PDF
+    ],
+  });
+
+  // Geist font family - local files
+  Font.register({
+    family: "Geist",
+    fonts: [
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/manrope@latest/latin-700-normal.ttf",
-        fontWeight: 700,
+        src: "/fonts/geist/Geist-Regular.ttf",
+        fontWeight: 400,
+        fontStyle: "normal",
+      },
+      {
+        src: "/fonts/geist/Geist-Medium.ttf",
+        fontWeight: 500,
+        fontStyle: "normal",
+      },
+      {
+        src: "/fonts/geist/Geist-SemiBold.ttf",
+        fontWeight: 600,
+        fontStyle: "normal",
+      },
+    ],
+  });
+
+  // Roboto Serif font family - for candidate name on cover page (only regular used)
+  Font.register({
+    family: "Roboto Serif",
+    fonts: [
+      {
+        src: "/fonts/roboto-serif/RobotoSerif-Regular.ttf",
+        fontWeight: 400,
+        fontStyle: "normal",
+      },
+      // Italic and SemiBold variants removed - not used in PDF
+    ],
+  });
+
+  // Disable hyphenation
+  Font.registerHyphenationCallback((word) => [word]);
+
+  fontsRegistered = true;
+};
+
+// Server-side font registration with absolute paths
+export const registerFontsServer = (baseUrl: string) => {
+  if (fontsRegistered) return;
+
+  // Manrope font family (only weights actually used)
+  Font.register({
+    family: "Manrope",
+    fonts: [
+      {
+        src: `${baseUrl}/fonts/manrope/Manrope-Regular.ttf`,
+        fontWeight: 400,
+        fontStyle: "normal",
+      },
+      {
+        src: `${baseUrl}/fonts/manrope/Manrope-Medium.ttf`,
+        fontWeight: 500,
+        fontStyle: "normal",
+      },
+      {
+        src: `${baseUrl}/fonts/manrope/Manrope-SemiBold.ttf`,
+        fontWeight: 600,
         fontStyle: "normal",
       },
     ],
@@ -34,50 +103,37 @@ export const registerFonts = () => {
     family: "Geist",
     fonts: [
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-400-normal.ttf",
+        src: `${baseUrl}/fonts/geist/Geist-Regular.ttf`,
         fontWeight: 400,
         fontStyle: "normal",
       },
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-500-normal.ttf",
+        src: `${baseUrl}/fonts/geist/Geist-Medium.ttf`,
         fontWeight: 500,
         fontStyle: "normal",
       },
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@latest/latin-600-normal.ttf",
+        src: `${baseUrl}/fonts/geist/Geist-SemiBold.ttf`,
         fontWeight: 600,
         fontStyle: "normal",
       },
     ],
   });
 
-  // Roboto Serif font family - for candidate name on cover page
+  // Roboto Serif font family (only regular used)
   Font.register({
     family: "Roboto Serif",
     fonts: [
       {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/roboto-serif@latest/latin-400-normal.ttf",
+        src: `${baseUrl}/fonts/roboto-serif/RobotoSerif-Regular.ttf`,
         fontWeight: 400,
         fontStyle: "normal",
-      },
-      {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/roboto-serif@latest/latin-400-italic.ttf",
-        fontWeight: 400,
-        fontStyle: "italic",
-      },
-      {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/roboto-serif@latest/latin-600-normal.ttf",
-        fontWeight: 600,
-        fontStyle: "normal",
-      },
-      {
-        src: "https://cdn.jsdelivr.net/fontsource/fonts/roboto-serif@latest/latin-600-italic.ttf",
-        fontWeight: 600,
-        fontStyle: "italic",
       },
     ],
   });
 
   // Disable hyphenation
   Font.registerHyphenationCallback((word) => [word]);
+
+  fontsRegistered = true;
 };

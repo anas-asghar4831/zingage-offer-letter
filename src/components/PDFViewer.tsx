@@ -1,46 +1,98 @@
-"use client";
 
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { pdf } from "@react-pdf/renderer";
-import { OfferLetterDocument } from "./pdf";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { OfferLetterData } from "@/lib/types";
 import { defaultOfferData } from "@/lib/types";
-import { registerFonts } from "@/lib/fonts";
-
-// Dynamically import PDFViewer to avoid SSR issues
-const PDFViewerComponent = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFViewer),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-full">
-        <p>Loading PDF viewer...</p>
-      </div>
-    ),
-  }
-);
 
 interface PDFViewerProps {
   data?: OfferLetterData;
 }
 
 export default function PDFViewer({ data = defaultOfferData }: PDFViewerProps) {
-  const [isClient, setIsClient] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [baseUrl, setBaseUrl] = useState("");
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const etagRef = useRef<string | null>(null);
 
+  // Generate PDF URL for preview via server
+  const loadPreview = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(etagRef.current && { "If-None-Match": etagRef.current }),
+        },
+        body: JSON.stringify(data),
+      });
+
+      // 304 Not Modified - use cached version
+      if (response.status === 304) {
+        setIsLoading(false);
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF preview");
+      }
+
+      // Store ETag for future requests
+      const etag = response.headers.get("ETag");
+      if (etag) {
+        etagRef.current = etag;
+      }
+
+      const blob = await response.blob();
+
+      // Revoke old URL to prevent memory leaks
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+
+      const url = URL.createObjectURL(blob);
+      setPdfUrl(url);
+    } catch (err) {
+      console.error("Error loading preview:", err);
+      setError("Failed to load PDF preview");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [data, pdfUrl]);
+
+  // Load preview on mount and when data changes
   useEffect(() => {
-    registerFonts();
-    setIsClient(true);
-    setBaseUrl(window.location.origin);
-  }, []);
+    loadPreview();
 
+    // Cleanup URL on unmount
+    return () => {
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  // Download PDF via server (no client-side generation)
   const handleDownload = async () => {
     setIsGenerating(true);
-    try {
-      const blob = await pdf(<OfferLetterDocument data={data} baseUrl={baseUrl} />).toBlob();
 
+    try {
+      const response = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF");
+      }
+
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -49,23 +101,13 @@ export default function PDFViewer({ data = defaultOfferData }: PDFViewerProps) {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
+    } catch (err) {
+      console.error("Error downloading PDF:", err);
+      setError("Failed to download PDF");
     } finally {
       setIsGenerating(false);
     }
   };
-
-  if (!isClient) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading PDF viewer...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
@@ -110,14 +152,34 @@ export default function PDFViewer({ data = defaultOfferData }: PDFViewerProps) {
         </button>
       </header>
 
-      {/* PDF Viewer */}
+      {/* PDF Viewer - Using iframe for server-generated PDF */}
       <div className="flex-1 p-4">
-        <PDFViewerComponent
-          style={{ width: "100%", height: "100%", border: "none" }}
-          showToolbar={true}
-        >
-          <OfferLetterDocument data={data} baseUrl={baseUrl} />
-        </PDFViewerComponent>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full bg-white rounded-lg shadow">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading PDF preview...</p>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center h-full bg-white rounded-lg shadow">
+            <div className="text-center">
+              <p className="text-red-600 mb-4">{error}</p>
+              <button
+                onClick={loadPreview}
+                className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        ) : pdfUrl ? (
+          <iframe
+            src={pdfUrl}
+            className="w-full h-full rounded-lg shadow bg-white"
+            title="PDF Preview"
+          />
+        ) : null}
       </div>
     </div>
   );

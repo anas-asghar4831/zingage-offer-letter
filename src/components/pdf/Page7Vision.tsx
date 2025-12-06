@@ -1,7 +1,6 @@
-"use client";
-
 import { Page, View, Text, Image, Svg, Path, StyleSheet, Link } from "@react-pdf/renderer";
 import { colors } from "@/lib/styles";
+import { getAssetUrl } from "@/lib/assets";
 
 const styles = StyleSheet.create({
   page: {
@@ -214,17 +213,17 @@ interface Page7Props {
 }
 
 export default function Page7Vision({ baseUrl }: Page7Props) {
-  // Testimonial/press images from Figma - matched to node IDs
+  // Testimonial/press images from Figma
   const images = {
-    image1: `${baseUrl}/assets/page7/0f063932c9bdc7899ef33dafccb646e9595b81e6.png`, // image 3148: Slack chat
-    image2: `${baseUrl}/assets/page7/0ad59e976cb8d51d22f23ff7b52c3c1659c59478.png`, // image 3153: Senior Helpers
-    image3: `${baseUrl}/assets/page7/5ebe016b74a5d735f2367e791b14b1cd70a00bc1.png`, // image 3143: Small testimonial
-    image4: `${baseUrl}/assets/page7/85398fd7f7bbccec8aa9ddfe3bf647a997976a33.png`, // image 3146: Wide testimonial
-    image5: `${baseUrl}/assets/page7/da6928cb5b29a134d88c8ea3c1a841cbc552692a.png`, // image 3151: Amy testimonial
-    image6: `${baseUrl}/assets/page7/54d1b9f8af828619b75355d39317a09f7bb29540.png`, // image 3144: LOL quote
-    image7: `${baseUrl}/assets/page7/5e707d437b9e65ad8628648714d77b579ce40873.png`, // image 3152: Victor, Great day
-    image8: `${baseUrl}/assets/page7/7343bfeebad755858f969b788542265ea10a3363.png`, // image 3145: Team photo
-    image9: `${baseUrl}/assets/page7/f4bb6890f63fc52854a9c9e0854ee1fdbccc07cf.png`, // image 3147: Brian email
+    testimonialBg: getAssetUrl(baseUrl, "/assets/page7/testimonial-bg.png"),
+    pressCollage: getAssetUrl(baseUrl, "/assets/page7/press-collage.png"),
+    avatar1: getAssetUrl(baseUrl, "/assets/page7/avatar-01.png"),
+    avatar2: getAssetUrl(baseUrl, "/assets/page7/avatar-02.png"),
+    avatar3: getAssetUrl(baseUrl, "/assets/page7/avatar-03.png"),
+    avatar4: getAssetUrl(baseUrl, "/assets/page7/avatar-04.png"),
+    avatar5: getAssetUrl(baseUrl, "/assets/page7/avatar-05.png"),
+    heroImage: getAssetUrl(baseUrl, "/assets/page7/hero-image.png"),
+    iconSmall: getAssetUrl(baseUrl, "/assets/page7/icon-small.png"),
   };
 
   return (
@@ -266,31 +265,31 @@ export default function Page7Vision({ baseUrl }: Page7Props) {
       {/* eslint-disable jsx-a11y/alt-text */}
       {/* Right side image grid - wrapped in Views for borders */}
       <View style={styles.imageContainer1}>
-        <Image src={images.image1} style={styles.image} />
+        <Image src={images.testimonialBg} style={styles.image} />
       </View>
       <View style={styles.imageContainer2}>
-        <Image src={images.image2} style={styles.image} />
+        <Image src={images.pressCollage} style={styles.image} />
       </View>
       <View style={styles.imageContainer3}>
-        <Image src={images.image3} style={styles.image} />
+        <Image src={images.avatar1} style={styles.image} />
       </View>
       <View style={styles.imageContainer4}>
-        <Image src={images.image4} style={styles.image} />
+        <Image src={images.avatar2} style={styles.image} />
       </View>
       <View style={styles.imageContainer5}>
-        <Image src={images.image5} style={styles.image} />
+        <Image src={images.avatar3} style={styles.image} />
       </View>
       <View style={styles.imageContainer6}>
-        <Image src={images.image6} style={styles.image} />
+        <Image src={images.avatar4} style={styles.image} />
       </View>
       <View style={styles.imageContainer7}>
-        <Image src={images.image7} style={styles.image} />
+        <Image src={images.avatar5} style={styles.image} />
       </View>
       <View style={styles.imageContainer8}>
-        <Image src={images.image8} style={styles.image} />
+        <Image src={images.heroImage} style={styles.image} />
       </View>
       <View style={styles.imageContainer9}>
-        <Image src={images.image9} style={styles.image} />
+        <Image src={images.iconSmall} style={styles.image} />
       </View>
       {/* eslint-enable jsx-a11y/alt-text */}
     </Page>

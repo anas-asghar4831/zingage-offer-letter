@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
-"use client";
-
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 import { colors } from "@/lib/styles";
+import { getAssetUrl } from "@/lib/assets";
 import type { OfferLetterData } from "@/lib/types";
 import { ZingageLogoOrange } from "./Page7Vision";
 
@@ -112,7 +111,7 @@ interface Page2Props {
 }
 
 export default function Page2Introduction({ data, baseUrl }: Page2Props) {
-  const foundersImageUrl = `${baseUrl}/assets/images/founder.png`;
+  const foundersImageUrl = getAssetUrl(baseUrl, "/assets/images/founder.png");
 
   return (
     <Page size={[1920, 1080]} style={styles.page}>

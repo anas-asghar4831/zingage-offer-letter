@@ -1,5 +1,6 @@
 import { Page, View, Text, Image, Svg, Path, StyleSheet } from "@react-pdf/renderer";
 import { colors } from "@/lib/styles";
+import { getAssetUrl } from "@/lib/assets";
 
 const styles = StyleSheet.create({
   page: {
@@ -164,43 +165,43 @@ interface Page5Props {
 export default function Page5Team({ baseUrl }: Page5Props) {
   // Team member avatars - Builders (10 avatars based on Figma design)
   const buildersAvatars = [
-    `${baseUrl}/assets/team/Mask group.png`,
-    `${baseUrl}/assets/team/Mask groupw.png`,
-    `${baseUrl}/assets/team/Mask grouewqp.png`,
-    `${baseUrl}/assets/team/Mask groupdas.png`,
-    `${baseUrl}/assets/team/Mask grouqwp.png`,
-    `${baseUrl}/assets/team/Mask groasup.png`,
-    `${baseUrl}/assets/team/Mask groudasp.png`,
-    `${baseUrl}/assets/team/Mask grousap.png`,
-    `${baseUrl}/assets/team/Mask grqwoup.png`,
-    `${baseUrl}/assets/team/weqqwew.png`,
+    getAssetUrl(baseUrl, "/assets/team/builder-01.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-02.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-03.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-04.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-05.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-06.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-07.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-08.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-09.png"),
+    getAssetUrl(baseUrl, "/assets/team/builder-10.png"),
   ];
 
   // GTM/OPS avatars (5 avatars based on Figma design)
   const gtmAvatars = [
-    `${baseUrl}/assets/GTMOPS/Mask group.png`,
-    `${baseUrl}/assets/GTMOPS/Mask group 2.png`,
-    `${baseUrl}/assets/GTMOPS/Mask group3.png`,
-    `${baseUrl}/assets/GTMOPS/Mask grou04p.png`,
-    `${baseUrl}/assets/GTMOPS/Mask grloup.png`,
+    getAssetUrl(baseUrl, "/assets/GTMOPS/gtmops-01.png"),
+    getAssetUrl(baseUrl, "/assets/GTMOPS/gtmops-02.png"),
+    getAssetUrl(baseUrl, "/assets/GTMOPS/gtmops-03.png"),
+    getAssetUrl(baseUrl, "/assets/GTMOPS/gtmops-04.png"),
+    getAssetUrl(baseUrl, "/assets/GTMOPS/gtmops-05.png"),
   ];
 
   // Company logos for Experience row (6 logos: Ramp, Tennr, Astorian, Pacvue, Datadog, Uber)
   const companyLogos = [
-    { src: `${baseUrl}/assets/Experience/ramp_logo.png`, width: 173, height: 46, name: "Ramp" },
-    { src: `${baseUrl}/assets/Experience/tennr_logo.png`, width: 164, height: 42, name: "Tennr" },
-    { src: `${baseUrl}/assets/Experience/astorian.png`, width: 283, height: 40, name: "Astorian" },
-    { src: `${baseUrl}/assets/Experience/pacvue_logo.png`, width: 229, height: 40, name: "Pacvue" },
-    { src: `${baseUrl}/assets/Experience/datadog_logo.png`, width: 177, height: 44, name: "Datadog" },
-    { src: `${baseUrl}/assets/Experience/Vector.png`, width: 130, height: 44, name: "Uber" },
+    { src: getAssetUrl(baseUrl, "/assets/Experience/ramp-logo.png"), width: 173, height: 46, name: "Ramp" },
+    { src: getAssetUrl(baseUrl, "/assets/Experience/tennr-logo.png"), width: 164, height: 42, name: "Tennr" },
+    { src: getAssetUrl(baseUrl, "/assets/Experience/astorian-logo.png"), width: 283, height: 40, name: "Astorian" },
+    { src: getAssetUrl(baseUrl, "/assets/Experience/pacvue-logo.png"), width: 229, height: 40, name: "Pacvue" },
+    { src: getAssetUrl(baseUrl, "/assets/Experience/datadog-logo.png"), width: 177, height: 44, name: "Datadog" },
+    { src: getAssetUrl(baseUrl, "/assets/Experience/uber-logo.png"), width: 130, height: 44, name: "Uber" },
   ];
 
   // Investor logos (4 logos: Bessemer, TQ Ventures, South Park Commons, WndrCo)
   const investorLogos = [
-    { src: `${baseUrl}/assets/Investors/Group.png`, width: 128, height: 55, name: "Bessemer" },
-    { src: `${baseUrl}/assets/Investors/tq_ventures_logo.png`, width: 57, height: 67, name: "TQ Ventures" },
-    { src: `${baseUrl}/assets/Investors/Vector.png`, width: 59, height: 67, name: "South Park Commons" },
-    { src: `${baseUrl}/assets/Investors/wndrco_logo.png.png`, width: 194, height: 46, name: "WndrCo" },
+    { src: getAssetUrl(baseUrl, "/assets/Investors/bessemer-logo.png"), width: 128, height: 55, name: "Bessemer" },
+    { src: getAssetUrl(baseUrl, "/assets/Investors/tq-ventures-logo.png"), width: 57, height: 67, name: "TQ Ventures" },
+    { src: getAssetUrl(baseUrl, "/assets/Investors/southpark-logo.png"), width: 59, height: 67, name: "South Park Commons" },
+    { src: getAssetUrl(baseUrl, "/assets/Investors/wndrco-logo.png"), width: 194, height: 46, name: "WndrCo" },
   ];
 
   return (

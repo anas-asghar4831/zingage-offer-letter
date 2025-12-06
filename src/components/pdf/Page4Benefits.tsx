@@ -1,5 +1,3 @@
-"use client";
-
 import { Page, View, Text, Svg, Path, StyleSheet } from "@react-pdf/renderer";
 import { colors } from "@/lib/styles";
 
