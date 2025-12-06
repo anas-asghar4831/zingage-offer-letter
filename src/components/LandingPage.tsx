@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { OfferLetterData } from "@/lib/types";
 import { registerFonts } from "@/lib/fonts";
-import OfferLetterForm from "./OfferLetterForm";
+import OfferLetterForm, { type FormData } from "./OfferLetterForm";
 
 // Zingage Logo SVG Component
 function ZingageLogo({ className = "" }: { className?: string }) {
@@ -19,19 +20,6 @@ function ZingageLogo({ className = "" }: { className?: string }) {
       <path d="M33.9739 20.0019L28.6745 13.8976C25.5404 16.6033 21.4541 18.2401 16.9846 18.2401C12.5158 18.2401 8.42999 16.6037 5.2961 13.8987L1.98422e-05 20.0059C4.21162 23.6426 9.60724 25.9505 15.5323 26.2765L0 40.9066L5.29946 47.0109C8.43353 44.3052 12.5199 42.6684 16.9893 42.6684C21.4581 42.6684 25.5439 44.3048 28.6778 47.0098L33.9739 40.9025C29.7623 37.2659 24.3667 34.9579 18.4417 34.632L33.9739 20.0019Z" fill="currentColor"/>
     </svg>
   );
-}
-
-// Extended form data interface to track raw form values
-interface FormData {
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  introParagraphs: string[];
-  title: string;
-  salary: string;
-  shares: string;
-  equityPercentage: string;
-  startDate: string;
 }
 
 export default function LandingPage() {
@@ -83,9 +71,9 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 bg-[#FCFBE9]/95 backdrop-blur-sm border-b border-[#D6D4B6]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <ZingageLogo className="h-8 sm:h-10 w-auto text-[#FF6B02]" />
-            </div>
+            </Link>
           </div>
         </div>
       </header>

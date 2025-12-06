@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { OfferLetterData } from "@/lib/types";
 
 // Form data interface for raw form values
-interface FormData {
+export interface FormData {
   firstName: string;
   lastName: string;
   fullName: string;
@@ -22,37 +22,53 @@ interface OfferLetterFormProps {
   initialData?: FormData | null;
 }
 
-export default function OfferLetterForm({ onSubmit, isGenerating, initialData }: OfferLetterFormProps) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [fullNameOverride, setFullNameOverride] = useState<string | null>(null);
-  const [introParagraphs, setIntroParagraphs] = useState<string[]>([
-    "We're thrilled to extend this offer to join Zingage as part of our founding team. This isn't just a job offer—it's an invitation to help shape the future of how essential work gets done.",
-  ]);
-  const [title, setTitle] = useState("");
-  const [salary, setSalary] = useState("");
-  const [shares, setShares] = useState("");
-  const [equityPercentage, setEquityPercentage] = useState("");
-  const [startDate, setStartDate] = useState("");
+// Helper to get initial state values
+function getInitialValues(initialData?: FormData | null) {
+  const defaultParagraph = "We're thrilled to extend this offer to join Zingage as part of our founding team. This isn't just a job offer—it's an invitation to help shape the future of how essential work gets done.";
 
-  // Prefill form data when initialData is provided
-  useEffect(() => {
-    if (initialData) {
-      setFirstName(initialData.firstName || "");
-      setLastName(initialData.lastName || "");
-      // If full name differs from combined first+last, set the override
-      const combinedName = `${initialData.firstName} ${initialData.lastName}`.trim();
-      if (initialData.fullName && initialData.fullName !== combinedName) {
-        setFullNameOverride(initialData.fullName);
-      }
-      setIntroParagraphs(initialData.introParagraphs?.length > 0 ? initialData.introParagraphs : [""]);
-      setTitle(initialData.title || "");
-      setSalary(initialData.salary || "");
-      setShares(initialData.shares || "");
-      setEquityPercentage(initialData.equityPercentage || "");
-      setStartDate(initialData.startDate || "");
-    }
-  }, [initialData]);
+  if (!initialData) {
+    return {
+      firstName: "",
+      lastName: "",
+      fullNameOverride: null as string | null,
+      introParagraphs: [defaultParagraph],
+      title: "",
+      salary: "",
+      shares: "",
+      equityPercentage: "",
+      startDate: "",
+    };
+  }
+
+  const combinedName = `${initialData.firstName || ""} ${initialData.lastName || ""}`.trim();
+  const hasFullNameOverride = initialData.fullName && initialData.fullName !== combinedName;
+
+  return {
+    firstName: initialData.firstName || "",
+    lastName: initialData.lastName || "",
+    fullNameOverride: hasFullNameOverride ? initialData.fullName : null,
+    introParagraphs: initialData.introParagraphs?.length > 0 ? initialData.introParagraphs : [defaultParagraph],
+    title: initialData.title || "",
+    salary: initialData.salary || "",
+    shares: initialData.shares || "",
+    equityPercentage: initialData.equityPercentage || "",
+    startDate: initialData.startDate || "",
+  };
+}
+
+export default function OfferLetterForm({ onSubmit, isGenerating, initialData }: OfferLetterFormProps) {
+  // Initialize all state from props using a helper function
+  const initial = getInitialValues(initialData);
+
+  const [firstName, setFirstName] = useState(initial.firstName);
+  const [lastName, setLastName] = useState(initial.lastName);
+  const [fullNameOverride, setFullNameOverride] = useState<string | null>(initial.fullNameOverride);
+  const [introParagraphs, setIntroParagraphs] = useState<string[]>(initial.introParagraphs);
+  const [title, setTitle] = useState(initial.title);
+  const [salary, setSalary] = useState(initial.salary);
+  const [shares, setShares] = useState(initial.shares);
+  const [equityPercentage, setEquityPercentage] = useState(initial.equityPercentage);
+  const [startDate, setStartDate] = useState(initial.startDate);
 
   // Compute fullName: use override if set, otherwise combine first + last
   const fullName = fullNameOverride !== null
@@ -65,18 +81,10 @@ export default function OfferLetterForm({ onSubmit, isGenerating, initialData }:
 
   const handleFirstNameChange = (value: string) => {
     setFirstName(value);
-    // Reset override when first name changes (unless user has manually edited)
-    if (fullNameOverride === null) {
-      // fullName will auto-update via computed value
-    }
   };
 
   const handleLastNameChange = (value: string) => {
     setLastName(value);
-    // Reset override when last name changes (unless user has manually edited)
-    if (fullNameOverride === null) {
-      // fullName will auto-update via computed value
-    }
   };
 
   const addParagraph = () => {

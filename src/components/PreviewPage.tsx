@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { pdf } from "@react-pdf/renderer";
 import { OfferLetterDocument } from "./pdf";
@@ -108,9 +109,9 @@ export default function PreviewPage() {
       <header className="sticky top-0 z-50 bg-[#FCFBE9]/95 backdrop-blur-sm border-b border-[#D6D4B6]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <ZingageLogo className="h-8 sm:h-10 w-auto text-[#FF6B02]" />
-            </div>
+            </Link>
             <div className="flex items-center gap-2 sm:gap-4">
               <button
                 onClick={handleBackToForm}
