@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-cream: #FCFBE9;
+  --color-cream-light: #FFFDEB;
+  --color-green: #2D6D4F;
+  --color-green-dark: #245a42;
+  --color-orange: #FF6B02;
+  --color-orange-light: #FF974D;
+  --color-orange-peach: #FFDABF;
+  --color-border: #D6D4B6;
+  --color-border-dark: #4E4E4E;
+  --background: #FCFBE9;
+  --foreground: #2D6D4F;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-cream: var(--color-cream);
+  --color-cream-light: var(--color-cream-light);
+  --color-green: var(--color-green);
+  --color-green-dark: var(--color-green-dark);
+  --color-orange: var(--color-orange);
+  --color-orange-light: var(--color-orange-light);
+  --color-orange-peach: var(--color-orange-peach);
+  --color-border: var(--color-border);
+  --color-border-dark: var(--color-border-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Manrope', Arial, Helvetica, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-orange-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-orange);
+}
+
+/* Form input focus styles */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-orange) !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 2, 0.15);
+}
+
+/* Button hover animation */
+.btn-primary {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 2, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Textarea paragraph styling */
+.paragraph-input {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Animation for adding/removing paragraphs */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.paragraph-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* PDF Preview container */
+.pdf-preview-container {
+  background: linear-gradient(135deg, var(--color-cream-light) 0%, var(--color-cream) 100%);
 }
