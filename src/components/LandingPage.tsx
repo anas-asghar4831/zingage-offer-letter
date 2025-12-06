@@ -1,11 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { OfferLetterData } from "@/lib/types";
 import { registerFonts } from "@/lib/fonts";
 import OfferLetterForm, { type FormData } from "./OfferLetterForm";
+
+// Subscribe function for useSyncExternalStore (no-op for client check)
+function subscribe() {
+  return () => {};
+}
+
+// Snapshot functions for useSyncExternalStore
+function getClientSnapshot() {
+  return true;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
+// Get initial form data from localStorage
+function getFormDataSnapshot(): FormData | null {
+  if (typeof window === "undefined") return null;
+  const storedFormData = localStorage.getItem("offerLetterFormData");
+  if (storedFormData) {
+    try {
+      return JSON.parse(storedFormData);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+function getFormDataServerSnapshot(): FormData | null {
+  return null;
+}
 
 // Zingage Logo SVG Component
 function ZingageLogo({ className = "" }: { className?: string }) {
@@ -24,23 +56,17 @@ function ZingageLogo({ className = "" }: { className?: string }) {
 
 export default function LandingPage() {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [initialFormData, setInitialFormData] = useState<FormData | null>(null);
 
+  // Use useSyncExternalStore for hydration-safe client detection
+  const isClient = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
+
+  // Use useSyncExternalStore to get initial form data from localStorage
+  const initialFormData = useSyncExternalStore(subscribe, getFormDataSnapshot, getFormDataServerSnapshot);
+
+  // Register fonts on client side only (this doesn't set state, so it's safe in useEffect)
   useEffect(() => {
     registerFonts();
-    setIsClient(true);
-
-    // Check for existing form data in localStorage (for editing)
-    const storedFormData = localStorage.getItem("offerLetterFormData");
-    if (storedFormData) {
-      try {
-        setInitialFormData(JSON.parse(storedFormData));
-      } catch {
-        // Invalid data, ignore
-      }
-    }
   }, []);
 
   const handleFormSubmit = (data: OfferLetterData, formData: FormData) => {
