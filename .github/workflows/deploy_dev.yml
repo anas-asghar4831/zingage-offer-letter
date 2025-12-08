@@ -13,8 +13,8 @@ jobs:
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /var/www/projects/zingage-offer-letter
+            cd /var/www/projects/zingage-offer-letter-dev
             sudo ./update.sh
