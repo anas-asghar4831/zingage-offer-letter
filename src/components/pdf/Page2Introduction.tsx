@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, View, Text, Image, StyleSheet, Svg, Path, Defs, LinearGradient, RadialGradient, Stop, G } from "@react-pdf/renderer";
+import { Page, View, Text, Image, StyleSheet, Svg, Path, Defs, LinearGradient, Stop, G } from "@react-pdf/renderer";
 import { colors } from "@/lib/styles";
 import { getAssetUrl } from "@/lib/assets";
 import type { OfferLetterData } from "@/lib/types";
-import { ZingageLogoOrange } from "./Page7Vision";
+import { ZingageLogoOrange } from "./shared";
 
 // Waving hand emoji SVG component
 function WaveEmoji({ size = 48 }: { size?: number }) {
