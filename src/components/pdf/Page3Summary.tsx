@@ -163,7 +163,7 @@ export default function Page3Summary({ data }: Page3Props) {
             <Text style={styles.label}>Vesting Schedule:</Text>
           </View>
           <View style={styles.valueCell}>
-            <Text style={styles.value}>4 Years equal distribution, 1-Year Cliff</Text>
+            <Text style={styles.value}>{data.vestingSchedule}</Text>
           </View>
         </View>
 

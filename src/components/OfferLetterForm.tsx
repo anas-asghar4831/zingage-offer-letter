@@ -115,12 +115,13 @@ export default function OfferLetterForm({ onSubmit, isGenerating, initialData }:
     const formData: OfferLetterData = {
       firstName: firstName || "John",
       fullName: fullName || firstName || "John Smith",
-      introParagraph: combinedParagraphs || "We're thrilled to extend this offer to join Zingage.",
+      introParagraph: combinedParagraphs || "Intro Paragraph",
       title: title || "Software Engineer",
       salary: salary ? `$${salary.replace(/[^0-9]/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")}` : "$150,000",
       shares: shares || "50,000",
       equityPercentage: equityPercentage ? `${equityPercentage.replace("%", "")}%` : "0.5%",
       startDate: startDate ? formatDate(startDate) : "January 15, 2025",
+      vestingSchedule: "4 Years equal distribution, 1-Year Cliff",
     };
 
     // Raw form data for editing
