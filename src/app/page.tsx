@@ -20,7 +20,7 @@ export default function Home() {
       {/* Main Content - Server rendered layout with client form */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 ">
         <div className="max-w-2xl mx-auto">
-          <h1 className="mt-2 text-3xl sm:text-4xl font-bold mb-6 text-[#2D6D4F] text-center">Offer Letter Generator</h1>
+          <h1 className="mt-2 text-3xl sm:text-4xl font-bold mb-6 text-[#2D6D4F] text-center">Offer Letter </h1>
           {/* Form Card - Server rendered container, client form inside */}
           <div className="bg-white rounded-2xl shadow-lg border border-[#D6D4B6] p-6 sm:p-8">
             <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#D6D4B6]">
