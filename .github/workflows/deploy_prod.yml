@@ -1,0 +1,20 @@
+name: Deploy - Prod
+on:
+  workflow_run:
+    workflows: ["Build - Prod"]
+    types: [completed]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/projects/zingage-offer-letter-prod
+            sudo ./update.sh
