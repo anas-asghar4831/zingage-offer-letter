@@ -7,6 +7,22 @@ import type { OfferLetterData } from "./types";
 import { defaultOfferData } from "./types";
 
 /**
+ * Normalize input keys by stripping trailing newlines
+ * Handles both "Field name?" and "Field name?\n" formats
+ */
+export function normalizeInputKeys(input: Record<string, unknown>): Record<string, unknown> {
+  const normalized: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(input)) {
+    // Strip trailing newlines and whitespace from keys
+    const normalizedKey = key.replace(/\n+$/, "").trim();
+    normalized[normalizedKey] = value;
+  }
+
+  return normalized;
+}
+
+/**
  * Convert Excel serial date to readable date string
  * Excel serial date: days since December 30, 1899
  */
@@ -164,7 +180,10 @@ export function buildVestingSchedule(
 /**
  * Main transform function - converts spreadsheet input to PDF data
  */
-export function transformInput(input: OfferLetterInput): OfferLetterData {
+export function transformInput(rawInput: OfferLetterInput): OfferLetterData {
+  // Normalize keys to handle trailing newlines
+  const input = normalizeInputKeys(rawInput as unknown as Record<string, unknown>) as unknown as OfferLetterInput;
+
   const fullName = input["What is the candidate's full name?"] || defaultOfferData.fullName;
 
   return {
@@ -192,7 +211,10 @@ export function transformInput(input: OfferLetterInput): OfferLetterData {
 /**
  * Validate that required fields are present
  */
-export function validateInput(input: Partial<OfferLetterInput>): string[] {
+export function validateInput(rawInput: Partial<OfferLetterInput>): string[] {
+  // Normalize keys to handle trailing newlines
+  const input = normalizeInputKeys(rawInput as Record<string, unknown>) as Partial<OfferLetterInput>;
+
   const errors: string[] = [];
 
   if (!input["What is the candidate's full name?"]) {
