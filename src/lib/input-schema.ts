@@ -11,6 +11,7 @@ export interface OfferLetterInput {
   "Who is their manager?": string;
   "What is their title?": string;
   "What is their start date?": number; // Excel serial date
+  "What is their start date? If we aren't sure, put your best guess / desired start date.": number; // Alternate field name
   "Do they have any direct reports? If so, who?": string;
   "Does this role require travel?": string;
   "Base compensation amount (write your answer as: $xxx, xxx, e.g., $120,000)": number | string;

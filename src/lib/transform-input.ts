@@ -190,7 +190,7 @@ export function transformInput(rawInput: OfferLetterInput): OfferLetterData {
     ),
     startDate: excelSerialToDate(
       input["What is their start date?"] ||
-      input["What is their start date? If we aren't sure, put your best guess / desired start date." as keyof OfferLetterInput] as number
+      input["What is their start date? If we aren't sure, put your best guess / desired start date."]
     ),
     vestingSchedule: buildVestingSchedule(
       input["Total Vesting Years"],
@@ -224,7 +224,7 @@ export function validateInput(rawInput: Partial<OfferLetterInput>): string[] {
     errors.push("Share count is required");
   }
 
-  if (!input["What is their start date?"] && !input["What is their start date? If we aren't sure, put your best guess / desired start date." as keyof OfferLetterInput]) {
+  if (!input["What is their start date?"] && !input["What is their start date? If we aren't sure, put your best guess / desired start date."]) {
     errors.push("Start date is required");
   }
 
