@@ -12,11 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Run only when:
-    # - A commit is pushed to dev
-    # - OR a PR was merged into dev
-    if: github.event_name == 'push' || github.event.pull_request.merged == true
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
