@@ -185,11 +185,12 @@ export function transformInput(rawInput: OfferLetterInput): OfferLetterData {
   const input = normalizeInputKeys(rawInput as unknown as Record<string, unknown>) as unknown as OfferLetterInput;
 
   const fullName = input["What is the candidate's full name?"] || defaultOfferData.fullName;
+  const introParagraph = input["What unique perspective or experience do they bring? (Note: this is for the first page of the Offer Letter PDF)"] || defaultOfferData.introParagraph;
 
   return {
     firstName: fullName.split(" ")[0] || defaultOfferData.firstName,
     fullName: fullName,
-    introParagraph: defaultOfferData.introParagraph, // Always use default
+    introParagraph: introParagraph,
     title: input["What is their title?"] || defaultOfferData.title,
     salary: parseCompensation(
       input["Base compensation amount (write your answer as: $xxx, xxx, e.g., $120,000)"]
