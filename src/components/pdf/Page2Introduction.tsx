@@ -180,7 +180,7 @@ export default function Page2Introduction({ data, baseUrl }: Page2Props) {
       {/* Content */}
       <View style={styles.content}>
         <View style={styles.greetingRow}>
-          <Text style={styles.greeting}>Hey, {data.fullName}</Text>
+          <Text style={styles.greeting}>Hey, {data.firstName}</Text>
           <WaveEmoji size={52} />
         </View>
         <Text style={styles.introParagraph}>{data.introParagraph}</Text>

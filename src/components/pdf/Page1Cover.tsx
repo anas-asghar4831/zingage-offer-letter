@@ -129,7 +129,7 @@ export default function Page1Cover({ data }: Page1Props) {
         <View>
           <Text style={styles.offerLetterTitle}>Offer Letter</Text>
           <Text style={styles.offerLetterTitle}> </Text>
-          <Text style={styles.candidateName}>{data.firstName}</Text>
+          <Text style={styles.candidateName}>{data.fullName}</Text>
           <View style={{ marginTop: 80 }}>
             <Text style={styles.quote}>
               Great companies are built by people who care deeply about the problems they&apos;re solving.
