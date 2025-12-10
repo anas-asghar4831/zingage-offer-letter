@@ -95,7 +95,8 @@ export function formatShares(count: number): string {
 
 /**
  * Parse and clean equity percentage string
- * Handles: 0.0025, "0.25%", "0.25%, $100K", "Implies 0.50% stake..."
+ * Handles: "0.2%", "0.25%, $100K", 0.2, 1
+ * Numbers are treated as percentages directly (0.2 -> "0.2%", 1 -> "1%")
  */
 export function parseEquityPercentage(value: number | string): string {
   if (!value && value !== 0) {
@@ -103,31 +104,17 @@ export function parseEquityPercentage(value: number | string): string {
   }
 
   if (typeof value === "number") {
-    // Convert decimal to percentage (0.0025 -> "0.25%")
-    if (value < 1) {
-      return `${(value * 100).toFixed(2)}%`;
-    }
-    // Already a percentage number (1 -> "1%")
+    // Treat number as percentage directly (0.2 -> "0.2%", 1 -> "1%")
     return `${value}%`;
   }
 
   // String - extract percentage
   const str = String(value).trim();
 
-  // Try to find percentage pattern
+  // Try to find percentage pattern (e.g., "0.25%, $100K" -> "0.25%")
   const percentMatch = str.match(/(\d+\.?\d*)%/);
   if (percentMatch) {
     return `${percentMatch[1]}%`;
-  }
-
-  // If it's just a decimal number as string
-  const numMatch = str.match(/^(\d*\.?\d+)$/);
-  if (numMatch) {
-    const num = parseFloat(numMatch[1]);
-    if (num < 1) {
-      return `${(num * 100).toFixed(2)}%`;
-    }
-    return `${num}%`;
   }
 
   // Return empty if can't parse
@@ -196,12 +183,15 @@ export function transformInput(rawInput: OfferLetterInput): OfferLetterData {
       input["Base compensation amount (write your answer as: $xxx, xxx, e.g., $120,000)"]
     ),
     shares: formatShares(
-      input["Offer letter share count - number of equity shares for the role. Simply write {number} Shares. E.g., 100,000 shares"]
+      input["Offer letter share count - number of equity shares for the role. Simply write {number} Shares. E.g., 100000"]
     ),
     equityPercentage: parseEquityPercentage(
-      input["Implies what percentage stake? Simply write the %:\n.03%\n.01%"]
+      input["Implies what percentage stake?  Simply write {percentage} E.g., 0.2% or 1.0% -- this will show up exactly as written on the OL"]
     ),
-    startDate: excelSerialToDate(input["What is their start date?"]),
+    startDate: excelSerialToDate(
+      input["What is their start date?"] ||
+      input["What is their start date? If we aren't sure, put your best guess / desired start date."]
+    ),
     vestingSchedule: buildVestingSchedule(
       input["Total Vesting Years"],
       input["Cliff Months"]
@@ -230,11 +220,11 @@ export function validateInput(rawInput: Partial<OfferLetterInput>): string[] {
     errors.push("Base compensation is required");
   }
 
-  if (!input["Offer letter share count - number of equity shares for the role. Simply write {number} Shares. E.g., 100,000 shares"]) {
+  if (!input["Offer letter share count - number of equity shares for the role. Simply write {number} Shares. E.g., 100000"]) {
     errors.push("Share count is required");
   }
 
-  if (!input["What is their start date?"]) {
+  if (!input["What is their start date?"] && !input["What is their start date? If we aren't sure, put your best guess / desired start date."]) {
     errors.push("Start date is required");
   }
 

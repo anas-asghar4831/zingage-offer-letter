@@ -1,4 +1,4 @@
-import { Page, View, Text, Svg, Path, StyleSheet } from "@react-pdf/renderer";
+import { Page, View, Text, Link, Svg, Path, StyleSheet } from "@react-pdf/renderer";
 import { colors } from "@/lib/styles";
 
 const styles = StyleSheet.create({
@@ -57,6 +57,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: colors.green,
   },
+  link: {
+    color: colors.green,
+    textDecoration: "underline",
+  },
   decorativeShape: {
     position: "absolute",
     right: -20,
@@ -99,11 +103,12 @@ function DecorativeShape() {
   );
 }
 
+const RIPPLING_URL = "https://app.rippling.com/benefits/preview/aoypvdkrlmrmkrvn";
+
 const benefits = [
   {
     label: "Health Care:",
-    value:
-      "Zingage offers high-quality medical, dental, and vision plans from top providers like Aetna and MetLife. You'll have several options for each coverage, and depending on the plans you choose.",
+    hasLink: true,
     isRegular: true,
   },
   {
@@ -145,9 +150,18 @@ export default function Page4Benefits() {
               <Text style={styles.label}>{benefit.label}</Text>
             </View>
             <View style={styles.valueCell}>
-              <Text style={benefit.isMedium ? styles.valueMedium : styles.value}>
-                {benefit.value}
-              </Text>
+              {benefit.hasLink ? (
+                <Text style={styles.value}>
+                  Zingage offers high-quality medical, dental, and vision plans. If you'd like to preview your benefits plan, see this link:{" "}
+                  <Link src={RIPPLING_URL} style={styles.link}>
+                    {RIPPLING_URL}
+                  </Link>
+                </Text>
+              ) : (
+                <Text style={benefit.isMedium ? styles.valueMedium : styles.value}>
+                  {benefit.value}
+                </Text>
+              )}
             </View>
           </View>
         ))}

@@ -12,6 +12,11 @@
 
 # testing
 /coverage
+/test-outputs/pdfs/
+
+# test files in root
+test-*.pdf
+test-*.json
 
 # next.js
 /.next/
