@@ -188,7 +188,10 @@ export function transformInput(rawInput: OfferLetterInput): OfferLetterData {
     equityPercentage: parseEquityPercentage(
       input["Implies what percentage stake?  Simply write {percentage} E.g., 0.2% or 1.0% -- this will show up exactly as written on the OL"]
     ),
-    startDate: excelSerialToDate(input["What is their start date?"]),
+    startDate: excelSerialToDate(
+      input["What is their start date?"] ||
+      input["What is their start date? If we aren't sure, put your best guess / desired start date." as keyof OfferLetterInput] as number
+    ),
     vestingSchedule: buildVestingSchedule(
       input["Total Vesting Years"],
       input["Cliff Months"]
@@ -221,7 +224,7 @@ export function validateInput(rawInput: Partial<OfferLetterInput>): string[] {
     errors.push("Share count is required");
   }
 
-  if (!input["What is their start date?"]) {
+  if (!input["What is their start date?"] && !input["What is their start date? If we aren't sure, put your best guess / desired start date." as keyof OfferLetterInput]) {
     errors.push("Start date is required");
   }
 
